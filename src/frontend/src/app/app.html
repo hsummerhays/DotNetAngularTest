@@ -1,0 +1,25 @@
+<div class="container">
+  <header>
+    <h1>{{ title }}</h1>
+    <div class="badge">AWS Cloud Optimized</div>
+  </header>
+
+  <main>
+    <div *ngIf="loading" class="loading">
+      <p>Provisioning cloud assets...</p>
+    </div>
+
+    <div *ngIf="!loading" class="product-grid">
+      <div class="card" *ngFor="let product of products">
+        <div class="product-name">{{ product.name }}</div>
+        <p class="product-desc">{{ product.description }}</p>
+        <div class="product-footer">
+          <span class="price">${{ product.price }}</span>
+          <button>Deploy Now</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<router-outlet />

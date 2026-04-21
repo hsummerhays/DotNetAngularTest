@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AwsApp.API/AwsApp.API.csproj" />
+    <Project Path="src/AwsApp.Application/AwsApp.Application.csproj" />
+    <Project Path="src/AwsApp.Domain/AwsApp.Domain.csproj" />
+    <Project Path="src/AwsApp.Infrastructure/AwsApp.Infrastructure.csproj" />
+  </Folder>
+</Solution>
