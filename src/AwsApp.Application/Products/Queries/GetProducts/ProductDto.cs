@@ -1,9 +1,3 @@
 namespace AwsApp.Application.Products.Queries.GetProducts;
 
-public class ProductDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public decimal Price { get; set; }
-}
+public record ProductDto(int Id, string Name, string? Description, decimal Price);

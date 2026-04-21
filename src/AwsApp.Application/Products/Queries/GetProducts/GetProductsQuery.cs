@@ -11,13 +11,7 @@ public class GetProductsQueryHandler(IApplicationDbContext context) : IRequestHa
     public async Task<List<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         return await context.Products
-            .Select(p => new ProductDto
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Price = p.Price
-            })
+            .Select(p => new ProductDto(p.Id, p.Name, p.Description, p.Price))
             .ToListAsync(cancellationToken);
     }
 }

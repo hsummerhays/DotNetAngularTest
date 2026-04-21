@@ -1,12 +1,14 @@
 using Amazon.S3;
 using Amazon.S3.Transfer;
 using AwsApp.Application.Common.Interfaces;
+using AwsApp.Infrastructure.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace AwsApp.Infrastructure.Services;
 
-public class S3FileService(IAmazonS3 s3Client) : IFileService
+public class S3FileService(IAmazonS3 s3Client, IOptions<S3Options> options) : IFileService
 {
-    private const string BucketName = "my-aws-app-bucket"; // Should be in config
+    private readonly S3Options _options = options.Value;
 
     public async Task<string> UploadFileAsync(Stream fileStream, string fileName)
     {
@@ -14,19 +16,24 @@ public class S3FileService(IAmazonS3 s3Client) : IFileService
         {
             InputStream = fileStream,
             Key = fileName,
-            BucketName = BucketName,
-            CannedACL = S3CannedACL.PublicRead
+            BucketName = _options.BucketName
         };
 
-        var fileTransferUtility = new TransferUtility(s3Client);
+        using var fileTransferUtility = new TransferUtility(s3Client);
         await fileTransferUtility.UploadAsync(uploadRequest);
 
-        return $"https://{BucketName}.s3.amazonaws.com/{fileName}";
+        return $"https://{_options.BucketName}.s3.{_options.Region}.amazonaws.com/{fileName}";
     }
 
     public async Task<Stream> DownloadFileAsync(string fileName)
     {
-        var response = await s3Client.GetObjectAsync(BucketName, fileName);
-        return response.ResponseStream;
+        var response = await s3Client.GetObjectAsync(_options.BucketName, fileName);
+        using (response)
+        {
+            var memoryStream = new MemoryStream();
+            await response.ResponseStream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+            return memoryStream;
+        }
     }
 }

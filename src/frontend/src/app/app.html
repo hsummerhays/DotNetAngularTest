@@ -9,7 +9,11 @@
       <p>Provisioning cloud assets...</p>
     </div>
 
-    <div *ngIf="!loading" class="product-grid">
+    <div *ngIf="!loading && products.length === 0" class="empty-state">
+      <p>No cloud products available for deployment.</p>
+    </div>
+
+    <div *ngIf="!loading && products.length > 0" class="product-grid">
       <div class="card" *ngFor="let product of products">
         <div class="product-name">{{ product.name }}</div>
         <p class="product-desc">{{ product.description }}</p>
