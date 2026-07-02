@@ -8,22 +8,22 @@ Here is a breakdown of how the project adheres to the core principles of Clean A
 The overriding rule that makes Clean Architecture work is **The Dependency Rule**: *Source code dependencies must point only inward, toward higher-level policies.*
 
 **How it follows:**
-* **`AwsApp.Domain`** has zero dependencies on any other project in the solution. It sits at the very center of the architecture.
-* **`AwsApp.Application`** depends only on `AwsApp.Domain`. It knows nothing about SQL Server, AWS S3, or HTTP requests.
-* **`AwsApp.Infrastructure`** depends on `AwsApp.Application` (and transitively `AwsApp.Domain`) to implement the interfaces defined in the Application layer.
-* **`AwsApp.API`** depends on `AwsApp.Application` and `AwsApp.Infrastructure` (solely for Dependency Injection wiring at startup).
+* **`[AwsApp.Domain](./src/AwsApp.Domain)`** has zero dependencies on any other project in the solution. It sits at the very center of the architecture.
+* **`[AwsApp.Application](./src/AwsApp.Application)`** depends only on `AwsApp.Domain`. It knows nothing about SQL Server, AWS S3, or HTTP requests.
+* **`[AwsApp.Infrastructure](./src/AwsApp.Infrastructure)`** depends on `AwsApp.Application` (and transitively `AwsApp.Domain`) to implement the interfaces defined in the Application layer.
+* **`[AwsApp.API](./src/AwsApp.API)`** depends on `AwsApp.Application` and `AwsApp.Infrastructure` (solely for Dependency Injection wiring at startup).
 
 ## 2. Entities (Domain Layer)
 This layer encapsulates the enterprise-wide business rules.
 
 **How it follows:**
-* The `AwsApp.Domain` project holds the core entities, value objects, domain exceptions, and domain events. By isolating this from everything else, the core business logic remains completely unaffected by changes to external frameworks (like upgrading Entity Framework or changing the web framework).
+* The `[AwsApp.Domain](./src/AwsApp.Domain)` project holds the core entities, value objects, domain exceptions, and domain events. By isolating this from everything else, the core business logic remains completely unaffected by changes to external frameworks (like upgrading Entity Framework or changing the web framework).
 
 ## 3. Use Cases (Application Layer)
 The software in this layer contains application-specific business rules. It encapsulates and implements all the use cases of the system.
 
 **How it follows:**
-* The `AwsApp.Application` project utilizes the CQRS pattern via MediatR (e.g., `GetProductsQuery` and `GetProductsQueryHandler`). Each handler represents a distinct use case.
+* The `[AwsApp.Application](./src/AwsApp.Application)` project utilizes the CQRS pattern via MediatR (e.g., `GetProductsQuery` and `GetProductsQueryHandler`). Each handler represents a distinct use case.
 * It orchestrates the flow of data to and from the entities, and directs those entities to use their enterprise-wide business rules to achieve the goals of the use case.
 * It defines interfaces (like `IFileService` and `IApplicationDbContext`) that it needs to do its job, but it does *not* implement them. This is the application of the Dependency Inversion Principle that makes Clean Architecture possible.
 
@@ -31,8 +31,8 @@ The software in this layer contains application-specific business rules. It enca
 The software in this layer is a set of adapters that convert data from the format most convenient for the use cases and entities, to the format most convenient for some external agency such as the Database or the Web.
 
 **How it follows:**
-* **`AwsApp.Infrastructure`:** Contains classes like `S3FileService` and `ApplicationDbContext`. These classes adapt the generic Application layer interfaces to specific technologies (AWS S3 SDK, Entity Framework Core).
-* **`AwsApp.API`:** The controllers (like `ProductsController`) act as adapters that take HTTP requests from the outside world, convert them into MediatR Queries/Commands, and pass them inward to the Application layer.
+* **`[AwsApp.Infrastructure](./src/AwsApp.Infrastructure)`:** Contains classes like `S3FileService` and `ApplicationDbContext`. These classes adapt the generic Application layer interfaces to specific technologies (AWS S3 SDK, Entity Framework Core).
+* **`[AwsApp.API](./src/AwsApp.API)`:** The controllers (like `ProductsController`) act as adapters that take HTTP requests from the outside world, convert them into MediatR Queries/Commands, and pass them inward to the Application layer.
 
 ## 5. Independence of UI, Database, and Frameworks
 **How it follows:**

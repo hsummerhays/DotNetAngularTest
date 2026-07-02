@@ -6,7 +6,7 @@ Here is a breakdown of how the project follows (and potentially doesn't follow) 
 
 ## 1. Single Responsibility Principle (SRP)
 **How it follows:**
-* **Clean Architecture Layers:** The backend is divided into `AwsApp.Domain`, `AwsApp.Application`, `AwsApp.Infrastructure`, and `AwsApp.API`. Each layer has a single, strictly defined responsibility.
+* **Clean Architecture Layers:** The backend is divided into `[AwsApp.Domain](./src/AwsApp.Domain)`, `[AwsApp.Application](./src/AwsApp.Application)`, `[AwsApp.Infrastructure](./src/AwsApp.Infrastructure)`, and `[AwsApp.API](./src/AwsApp.API)`. Each layer has a single, strictly defined responsibility.
 * **CQRS with MediatR:** Instead of having monolithic "Service" classes (e.g., a massive `ProductService` handling all CRUD operations), the application uses MediatR. For instance, the `GetProductsQueryHandler` class has only *one* reason to change: if the logic for retrieving products changes. 
 * **Thin API Controllers:** The `ProductsController` contains absolutely no business logic or database access. Its sole responsibility is HTTP routing and delegating the request to MediatR (`sender.Send(new GetProductsQuery())`).
 * **Frontend:** The Angular `AppComponent` delegates data fetching to the `ProductService`, keeping the component strictly focused on view state management.
@@ -27,7 +27,7 @@ Here is a breakdown of how the project follows (and potentially doesn't follow) 
 
 ## 5. Dependency Inversion Principle (DIP)
 **How it follows:**
-* **Inverted Dependencies:** In traditional n-tier architecture, the Application layer depends on the Database layer. Here, that dependency is inverted. `AwsApp.Application` defines the `IApplicationDbContext` and `IFileService` interfaces. `AwsApp.Infrastructure` (the low-level module) depends on `AwsApp.Application` (the high-level module) by implementing those interfaces. 
+* **Inverted Dependencies:** In traditional n-tier architecture, the Application layer depends on the Database layer. Here, that dependency is inverted. `[AwsApp.Application](./src/AwsApp.Application)` defines the `IApplicationDbContext` and `IFileService` interfaces. `[AwsApp.Infrastructure](./src/AwsApp.Infrastructure)` (the low-level module) depends on `AwsApp.Application` (the high-level module) by implementing those interfaces. 
 * **Constructor Injection:** Everywhere in the project (from the `ProductsController` requiring `ISender`, to `S3FileService` requiring `IAmazonS3`, to Angular components requiring `ProductService`), dependencies are passed in via the constructor rather than being newed up inside the classes.
 
 ---

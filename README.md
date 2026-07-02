@@ -16,22 +16,22 @@ Successfully scaffolded a modern application structure following Clean Architect
 ```
 
 ## Layers
-- **Domain**: Contains entities like `Product` and base classes. No dependencies on other layers.
-- **Application**: Business logic handling via MediatR and core interfaces.
-- **Infrastructure**: Persistence (EF Core) and AWS Integrations (S3, etc.).
-- **API**: Presentation layer, Scalar API documentation, and Controller endpoints.
+- **[Domain](./src/AwsApp.Domain)**: Contains entities like `Product` and base classes. No dependencies on other layers.
+- **[Application](./src/AwsApp.Application)**: Business logic handling via MediatR and core interfaces.
+- **[Infrastructure](./src/AwsApp.Infrastructure)**: Persistence (EF Core) and AWS Integrations (S3, etc.).
+- **[API](./src/AwsApp.API)**: Presentation layer, Scalar API documentation, and Controller endpoints.
 
 ## Tech Stack
 - **Backend**: .NET 10 (LTS), C# 14
 - **API Reference**: Scalar (Modern OpenAPI UI)
-- **Frontend**: Angular 20 (LTS), TypeScript 5.8
+- **Frontend**: [Angular](./src/frontend) 20 (LTS), TypeScript 5.8
 - **Cloud**: AWS (App Runner, S3, RDS)
-- **IaC**: Terraform
+- **IaC**: [Terraform](./terraform)
 
 ## Running Locally
 
 ### The Fast Way (Recommended)
-Run the automated startup script to launch both the backend and frontend in a split terminal window:
+Run the automated startup [run.ps1](./run.ps1) script to launch both the backend and frontend in a split terminal window:
 
 ```powershell
 .\run.ps1
